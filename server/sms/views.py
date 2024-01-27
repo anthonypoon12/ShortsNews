@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
+
 from twilio.twiml.messaging_response import MessagingResponse
 
 import os
@@ -8,6 +9,17 @@ from dotenv import load_dotenv
 import requests
 import json
 import urllib.request
+
+import sys
+import os
+
+# Add the parent directory to the sys.path
+current_dir = os.path.dirname(os.path.realpath(__file__))
+parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+sys.path.append(parent_dir)
+
+# Now you can import module.file
+import generategif
 
 @csrf_exempt
 def sms_response(request):
@@ -29,12 +41,4 @@ def sms_response(request):
         "bundle": "messaging_non_clips",
     }
 
-    response = requests.get("https://api.giphy.com/v1/gifs/search", params=parameters)
-
-    mp4url = response.json()['data'][0]['images']['original']['mp4']
-    urllib.request.urlretrieve(mp4url, "tempvid.mp4")
-
-    resp = MessagingResponse()
-    msg = resp.message("Your prompt has been received: " + str(mp4url))
-    
-    return HttpResponse(str(resp))
+    generategif.generateGif(body, 3)
