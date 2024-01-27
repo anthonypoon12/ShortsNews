@@ -3,7 +3,7 @@ import json
 import urllib.request
 import os
 from dotenv import load_dotenv
-import stitch
+import modules.stitch as s
 
 load_dotenv()
 
@@ -32,7 +32,7 @@ def generateGif(query, limit):
         urllib.request.urlretrieve(mp4url, outputPaths[-1])
 
 
-    stitch.stitch(outputPaths)
+    s.stitch(outputPaths)
 
 if __name__ == "__main__":
     import sys

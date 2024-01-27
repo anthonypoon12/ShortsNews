@@ -19,7 +19,7 @@ parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
 sys.path.append(parent_dir)
 
 # Now you can import module.file
-import generategif
+import modules.generategif as gg
 
 @csrf_exempt
 def sms_response(request):
@@ -41,4 +41,9 @@ def sms_response(request):
         "bundle": "messaging_non_clips",
     }
 
-    generategif.generateGif(body, 3)
+    gg.generateGif(body, 3)
+    
+    resp = MessagingResponse()
+    msg = resp.message("Your prompt has been received: " + body)
+    
+    return HttpResponse(str(resp))
