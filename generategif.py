@@ -24,7 +24,7 @@ parameters = {
 
 response = requests.get("https://api.giphy.com/v1/gifs/search", params=parameters)
 
-for i in range(3):
+for i in range(limit):
     # Appends url to list and retrieves the video
     mp4url = response.json()['data'][i]['images']['original']['mp4']
     outputPaths.append(f'./tempvid{i}.mp4')
