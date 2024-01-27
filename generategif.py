@@ -8,27 +8,32 @@ import stitch
 load_dotenv()
 
 API_KEY = os.getenv('GIPHY_API_KEY')
-query = "obama happy" + " no text"
-limit = 3
-outputPaths = []
 
-parameters = {
-    "api_key": API_KEY,
-    "q": query,
-    "limit": limit,
-    "offset": 0,
-    "rating": "g",
-    "lang": "en",
-    "bundle": "messaging_non_clips",
-}
+def generateGif(query, limit):
+    query = query + " no text"
+    outputPaths = []
 
-response = requests.get("https://api.giphy.com/v1/gifs/search", params=parameters)
+    parameters = {
+        "api_key": API_KEY,
+        "q": query,
+        "limit": limit,
+        "offset": 0,
+        "rating": "g",
+        "lang": "en",
+        "bundle": "messaging_non_clips",
+    }
 
-for i in range(limit):
-    # Appends url to list and retrieves the video
-    mp4url = response.json()['data'][i]['images']['original']['mp4']
-    outputPaths.append(f'./tempvid{i}.mp4')
-    urllib.request.urlretrieve(mp4url, outputPaths[-1])
+    response = requests.get("https://api.giphy.com/v1/gifs/search", params=parameters)
+
+    for i in range(limit):
+        # Appends url to list and retrieves the video
+        mp4url = response.json()['data'][i]['images']['original']['mp4']
+        outputPaths.append(f'./tempvid{i}.mp4')
+        urllib.request.urlretrieve(mp4url, outputPaths[-1])
 
 
-stitch.stitch(outputPaths)
+    stitch.stitch(outputPaths)
+
+if __name__ == "__main__":
+    import sys
+    generateGif(sys.argv[1], sys.argv[2])
