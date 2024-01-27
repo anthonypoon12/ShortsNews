@@ -3,6 +3,7 @@ import json
 import urllib.request
 import os
 from dotenv import load_dotenv
+import stitch
 
 load_dotenv()
 
@@ -29,3 +30,5 @@ for i in range(3):
     outputPaths.append(f'./tempvid{i}.mp4')
     urllib.request.urlretrieve(mp4url, outputPaths[-1])
 
+
+stitch.stitch(outputPaths)
