@@ -7,6 +7,7 @@ import os
 from dotenv import load_dotenv
 import requests
 import json
+import urllib.request
 
 @csrf_exempt
 def sms_response(request):
@@ -21,7 +22,7 @@ def sms_response(request):
     parameters = {
         "api_key": API_KEY,
         "q": query,
-        "limit": 1,
+        "limit": 3,
         "offset": 0,
         "rating": "g",
         "lang": "en",
@@ -31,10 +32,9 @@ def sms_response(request):
     response = requests.get("https://api.giphy.com/v1/gifs/search", params=parameters)
 
     mp4url = response.json()['data'][0]['images']['original']['mp4']
-
-    mp4file = requests.get(mp4url)
+    urllib.request.urlretrieve(mp4url, "tempvid.mp4")
 
     resp = MessagingResponse()
-    msg = resp.message("Your prompt has been received: " + str(mp4file.status_code))
+    msg = resp.message("Your prompt has been received: " + str(mp4url))
     
     return HttpResponse(str(resp))
