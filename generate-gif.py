@@ -1,8 +1,12 @@
 import requests
 import json
 import urllib.request
+import os
+from dotenv import load_dotenv
 
-API_KEY = "1Akxy1zQTa8CT2679RPoYKrd39GB1VeM"
+load_dotenv()
+
+API_KEY = os.getenv('GIPHY_API_KEY')
 query = "obama happy" + " no text"
 
 parameters = {
@@ -19,5 +23,4 @@ response = requests.get("https://api.giphy.com/v1/gifs/search", params=parameter
 
 mp4url = response.json()['data'][0]['images']['original']['mp4']
 
-urllib.request.urlretrieve(mp4url, './tempvid.mp4') 
-
+urllib.request.urlretrieve(mp4url, './tempvid.mp4')
