@@ -29,3 +29,7 @@ for i in range(3):
     outputPaths.append(f'./tempvid{i}.mp4')
     urllib.request.urlretrieve(mp4url, outputPaths[-1])
 
+<<<<<<< Updated upstream
+=======
+urllib.request.urlretrieve(mp4url, './tempvid.mp4')
+>>>>>>> Stashed changes
