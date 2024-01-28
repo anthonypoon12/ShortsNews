@@ -37,5 +37,3 @@ def stitch(input_files, mp3FileName):
 if __name__ == "__main__":
     import sys
     stitch(*sys.argv[1:])
-
-    import ffmpeg
