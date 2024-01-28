@@ -1,5 +1,8 @@
 from newsdataapi import NewsDataApiClient
 import requests, bs4
+import shorten_content
+import web_scrape
+import tts
 
 # from selenium import webdriver
 
@@ -39,7 +42,14 @@ topic = input()
 articles = get_articles(topic)
 print(f"give a number between 1 and {len(articles)}")
 index = int(input()) - 1
-print(articles[index].title)
+
+article = web_scrape.scrape_content(articles[index].link)
+
+shortener = shorten_content.ShortenContent()
+contents = shortener.shorten_prompt(article, 'right')
+
+for i in range(len(contents)):
+    tts.writeMP3(contents[i], i)
 
 # browser = webdriver.Firefox()
 # browser.get("https://www.nytimes.com/2024/01/27/world/middleeast/gaza-war-israel-hamas-negotiations.html")

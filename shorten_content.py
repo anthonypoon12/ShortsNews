@@ -106,9 +106,6 @@ class ShortenContent:
 
         return completion.choices[0].message.content
 
-
-shortener = ShortenContent()
-contents = shortener.shorten_prompt(testArticle, 'right')
 # print('left: \n')
 # print(shortener.shorten_prompt(testArticle, 'left'))
 #####
