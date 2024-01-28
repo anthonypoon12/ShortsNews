@@ -20,6 +20,7 @@ import modules.web_scrape as web_scrape
 import modules.tts as tts
 # import modules.upload_video as upload_video
 import modules.stitch as stitch
+import modules.mergeAudioVideo as merge
 
 # Add the parent directory to the sys.path
 current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -47,7 +48,11 @@ def sms_response(request):
 
         # API key authorization, Initialize the client with your API key
 
-        api = NewsDataApiClient(apikey="pub_372043babb911c02c68bff05b2d4fce6de861")
+        load_dotenv()
+
+        NEWS_API_KEY = os.getenv('NEWS_API_KEY')
+
+        api = NewsDataApiClient(apikey=NEWS_API_KEY)
         domain = 'cnn'
 
         # You can pass empty or with request parameters {ex. (country = "us")}
@@ -59,7 +64,7 @@ def sms_response(request):
                 self.index = index
 
         def get_articles(q):
-            response = api.news_api(q=q, country="us", language="en", domain=domain, size=5)
+            response = api.news_api(q=q, language="en", domain=domain, size=5)
 
             results = response["results"]
 
@@ -187,9 +192,11 @@ def sms_response(request):
                 tts.writeMP3(contentsLeft[i], i, "Left") #outputLeft0, ...
                 # generate output videos 
                 gg.generateGif(contentsLeft[i].keyword, "outputLeft" + str(i) + ".mp3") # outputLeft0.mp4, outputLeft1.mp4, ...
-                left_segments.append("outputLeft" + str(i) + ".mp4")
+                merge.merge("outputLeft" + str(i) + ".mp4", f"outputLeft{i}.mp3", f"newOutputLeft{i}.mp4")
+                left_segments.append("newOutputLeft" + str(i) + ".mp4")
                 # array of text for segments (3 elements per segment)
                 segment_text_array_left.append(contentsLeft[i].subtitle_chunk())
+                
 
             stitch.stitchMP4(left_segments, "finalLeft.mp4")
 
@@ -198,7 +205,9 @@ def sms_response(request):
                 tts.writeMP3(contentsRight[i], i, "Right") #outputRight0, ...
                 # generate output videos 
                 gg.generateGif(contentsRight[i].keyword, "outputRight" + str(i) + ".mp3") # outputRight0.mp4, outputRight1.mp4, ...
-                right_segments.append("outputRight" + str(i) + ".mp4")
+                merge.merge("outputRight" + str(i) + ".mp4", f"outputRight{i}.mp3", f"newOutputRight{i}.mp4")
+                
+                right_segments.append("newOutputRight" + str(i) + ".mp4")
 
                 # array of text for segments (3 elements per segment)
                 segment_text_array_right.append(contentsRight[i].subtitle_chunk())

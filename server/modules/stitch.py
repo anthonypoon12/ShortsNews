@@ -14,6 +14,8 @@ def stitch(input_files, mp3FileName, output_name):
     for file in input_files:
         input_streams.append(ffmpeg.input(file))
 
+    
+
     # Force all inputs to have the same resolution and aspect ratio
     input_streams = [inp.filter('scale', size='480x268').filter('setsar', ratio='1:1') for inp in input_streams]
 
@@ -29,11 +31,11 @@ def stitch(input_files, mp3FileName, output_name):
     }
 
     # Run ffmpeg to join the files
-    ffmpeg.output(joined, output_file, **output_options).run(overwrite_output=True)
+    ffmpeg.output(joined, output_name, **output_options).run(overwrite_output=True)
 
-    newInputStream = ffmpeg.input(output_file)
+    newInputStream = ffmpeg.input(output_name)
     newJoined = ffmpeg.concat(newInputStream, mp3_input_stream, v=1, a=1)
-    newJoined.output(f'{output_name}').run(overwrite_output=True)
+    newJoined.output(f'{output_file}').run(overwrite_output=True)
 
 def stitchMP4(input_files, output_name):
     output_file = f'{output_name}'
@@ -45,11 +47,13 @@ def stitchMP4(input_files, output_name):
         input_streams.append(ffmpeg.input(file))
 
     # Force all inputs to have the same resolution and aspect ratio
-    input_streams = [inp.filter('scale', size='480x268').filter('setsar', ratio='1:1') for inp in input_streams]
+    # input_streams = [inp.filter('scale', size='480x268') for inp in input_streams]
+    input_streams = [inp.filter('scale', size='480x268').filter('setsar', ratio='1/1') for inp in input_streams]
+
 
 
     # Concatenate the input streams
-    joined = ffmpeg.concat(*input_streams, v=1, a=0)
+    joined = ffmpeg.concat(*input_streams)
 
     # Output options
     output_options = {
@@ -64,17 +68,5 @@ def stitchMP4(input_files, output_name):
 
 
 if __name__ == "__main__":
-
-    input_video = ffmpeg.input('output.mp4')
-    # input_video = input_video.video
-
-    input_audio = ffmpeg.input('outputLeft0.mp3')
-    # input_audio = input_audio.audio
-
-    ffmpeg.concat(input_video, input_audio, v=1, a=1).output('vidwithaud.mp4').run()
-
-    # os.system(f'ffmpeg -i output.mp4 -i outputLeft0.mp3 -c:v copy -map 0:v -map 1:a -shortest -y vidwithhaud.mp4')
-
-    # ffmpeg.output(input_video, input_audio,'vidwithaud.mp4').run()
-    # import sys
-    # stitch(*sys.argv[1:])
+    import sys
+    stitch(*sys.argv[1:])
