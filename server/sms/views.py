@@ -1,3 +1,6 @@
+#!/usr/bin/python
+
+import subprocess, sys
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -218,6 +221,9 @@ def sms_response(request):
         # do editing to combine video, subway surfers, mp3
 
         # put on subtitles (3 subtitles spread across equally for each segment, from segment_text_array)
+            # Use ffmpeg to add subtitles
+            command = "ffmpeg -i finalRight.mp4 -vf subtitles=../script.srt output_srt.mp4"
+            subprocess.run(command, shell = True, executable="/bin/bash")
 
         # upload video to platform of choice
 
