@@ -178,11 +178,10 @@ def sms_response(request):
 
             for i in range(len(contents)):
                 tts.writeMP3(contents[i], i) #outputs 0...i
-                giphy_array.append((contents[i].keyword, contents[i].content, "output" + str(i) + ".mp3")) # (keyword, text segment, mp3 name)
+                # generate output videos 
+                gg.generateGif(contents[i].keyword, "output" + str(i) + ".mp3")
 
-        # generate videos and stitch video together
-
-        gg.generateGif(giphy_array)
+        # stitch videos together
 
         # do editing to combine video, subway surfers, mp3
 
