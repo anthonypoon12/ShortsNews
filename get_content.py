@@ -40,16 +40,26 @@ def get_articles(q):
 print("give a topic: ")
 topic = input()
 articles = get_articles(topic)
-print(f"give a number between 1 and {len(articles)}")
-index = int(input()) - 1
 
-article = web_scrape.scrape_content(articles[index].link)
+if len(articles) == 0:
+    printf('no articles')
+else:
+    print(f"give a number between 1 and {len(articles)}")
+    index = int(input()) - 1
 
-shortener = shorten_content.ShortenContent()
-contents = shortener.shorten_prompt(article, 'right')
+    article = web_scrape.scrape_content(articles[index].link)
 
-for i in range(len(contents)):
-    tts.writeMP3(contents[i], i)
+    if len(article) == 0:
+        print('did not get any content from scrape')
+    else:
+        shortener = shorten_content.ShortenContent()
+        contents = shortener.shorten_prompt(article, 'right')
+
+        if len(contents) == 0:
+            print('no segments')
+
+        for i in range(len(contents)):
+            tts.writeMP3(contents[i], i)
 
 # browser = webdriver.Firefox()
 # browser.get("https://www.nytimes.com/2024/01/27/world/middleeast/gaza-war-israel-hamas-negotiations.html")
