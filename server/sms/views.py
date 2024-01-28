@@ -18,6 +18,8 @@ import requests, bs4
 import modules.shorten_content as shorten_content
 import modules.web_scrape as web_scrape
 import modules.tts as tts
+# import modules.upload_video as upload_video
+import modules.stitch as stitch
 
 # Add the parent directory to the sys.path
 current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -166,26 +168,52 @@ def sms_response(request):
             return HttpResponse(str(resp))
         else:
             shortener = shorten_content.ShortenContent()
-            contents = shortener.shorten_prompt(article, 'right')
+            contentsLeft = shortener.shorten_prompt(article, 'left')
+            contentsRight = shortener.shorten_prompt(article, 'right')
 
-            if len(contents) == 0:
+            if len(contentsLeft) == 0 or len(contentsRight) == 0:
                 resp = MessagingResponse()
                 msg = resp.message("Not enough content found.")
                 return HttpResponse(str(resp))
 
             # we use summarized text segments to get mp3s
-            giphy_array = []
+            segment_text_array_left = []
+            segment_text_array_right = []
 
-            for i in range(len(contents)):
-                tts.writeMP3(contents[i], i) #outputs 0...i
+            left_segments = []
+            right_segments = []
+
+            for i in range(len(contentsLeft)):
+                tts.writeMP3(contentsLeft[i], i, "Left") #outputLeft0, ...
                 # generate output videos 
-                gg.generateGif(contents[i].keyword, "output" + str(i) + ".mp3")
+                gg.generateGif(contentsLeft[i].keyword, "outputLeft" + str(i) + ".mp3") # outputLeft0.mp4, outputLeft1.mp4, ...
+                left_segments.append("outputLeft" + str(i) + ".mp4")
+                # array of text for segments (3 elements per segment)
+                segment_text_array_left.append(contentsLeft[i].subtitle_chunk())
+
+            stitch.stitchMP4(left_segments, "finalLeft.mp4")
+
+
+            for i in range(len(contentsRight)):
+                tts.writeMP3(contentsRight[i], i, "Right") #outputRight0, ...
+                # generate output videos 
+                gg.generateGif(contentsRight[i].keyword, "outputRight" + str(i) + ".mp3") # outputRight0.mp4, outputRight1.mp4, ...
+                right_segments.append("outputRight" + str(i) + ".mp4")
+
+                # array of text for segments (3 elements per segment)
+                segment_text_array_right.append(contentsRight[i].subtitle_chunk())
 
         # stitch videos together
 
+            stitch.stitchMP4(right_segments, "finalRight.mp4")
         # do editing to combine video, subway surfers, mp3
 
+        # put on subtitles (3 subtitles spread across equally for each segment, from segment_text_array)
+
         # upload video to platform of choice
+
+        # upload_video.upload("left_video.mp4", "Left Wing News", "Left Wing News reporting.", "I, Am, Keywords")
+        # upload_video.upload("right_video.mp4", "Right Wing News", "Left Wing News reporting.", "I, Am, Keywords")
     
         resp = MessagingResponse()
         msg = resp.message("Your videos have been uploaded!!")

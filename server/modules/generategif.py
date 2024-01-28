@@ -53,7 +53,7 @@ def generateGif(query, mp3FileName):
         os.system(f"rm -f {outputPaths[-1]}")
         outputPaths[-1] = "trimmed.mp4"
 
-    s.stitch(outputPaths, mp3FileName)
+    s.stitch(outputPaths, mp3FileName, mp3FileName.replace('.mp3', '.mp4'))
 
     for file in outputPaths:
         os.system(f'rm {file}')

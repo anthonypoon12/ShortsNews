@@ -10,6 +10,21 @@ class SummarySegment:
     def __str__(self):
         return self.content + f" [{self.keyword}]. "
 
+    def subtitle_chunk(self):
+        words = self.content.split(' ')
+        leng = len(words)
+        chunkLen = round(leng / 3)
+        ret = ["", "", ""]
+        for i in range(leng):
+            if i < chunkLen:
+                ret[0] += words[i] + ' '
+            elif i < 2 * chunkLen:
+                ret[1] += words[i] + ' '
+            else:
+                ret[2] += words[i] + ' '
+
+        return ret
+
 
 class ShortenContent:
     def __init__(self):
@@ -20,11 +35,11 @@ class ShortenContent:
     def shorten_prompt(self, article, sway):
         emulate = 'Senator Alexandria Ocasio-Cortez' if sway == 'left' else 'Tucker Carlson'
 
-        prompt = (f"Your job is to summarize articles to be 130-150 words. Do not exceed 150 words. You will skew the "
+        prompt = (f"Your job is to summarize articles to be 60-80 words. Do not exceed 80 words. You will skew the "
                   f"article to have a strong {sway} wing bias. Be as polarizing and engaging as possible. You should "
                   f"use emotional rhetorical appeals. You will use simple language and syntax so that the summary "
                   f"targets a younger audience. You should emulate the speech of {emulate}. You may slightly "
-                  f"modify the facts of the article. Do not exceed 150 words.")
+                  f"modify the facts of the article. Do not exceed 80 words.")
 
         prompt1 = ("You will be given a piece of text. For each sentence in the text choose one word that best "
                    "describes that sentence and put it in a comma seperated list. You should return a comma seperated "

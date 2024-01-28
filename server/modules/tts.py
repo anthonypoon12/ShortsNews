@@ -8,7 +8,7 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "modules/wired-column-412623-7844
 client = texttospeech.TextToSpeechClient()
 
 
-def writeMP3(segment, index):
+def writeMP3(segment, index, skew):
     content = segment.content
     # Set the text input to be synthesized
     synthesis_input = texttospeech.SynthesisInput(text=content)
@@ -32,10 +32,10 @@ def writeMP3(segment, index):
     curr_len = 0
     curr_audio = None
     # The response's audio_content is binary.
-    with open(f"output{index}.mp3", "wb") as out:
+    with open(f"output{skew}{index}.mp3", "wb") as out:
         # Write the response to the output file.
         out.write(response.audio_content)
         print('Audio content written to file "output.mp3"')
-        curr_audio = MP3(f"output{index}.mp3")
+        curr_audio = MP3(f"output{skew}{index}.mp3")
         curr_len = curr_audio.info.length
         print(curr_len)
