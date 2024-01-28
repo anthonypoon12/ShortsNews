@@ -41,7 +41,7 @@ def sms_response(request):
         "bundle": "messaging_non_clips",
     }
 
-    gg.generateGif(body, 3)
+    gg.generateGif(body)
     
     resp = MessagingResponse()
     msg = resp.message("Your prompt has been received: " + body)

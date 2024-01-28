@@ -38,13 +38,14 @@ def generateGif(query):
 
     while timeNeeded > 0:
         timeNeeded -= duration
-        os.system(f'cp {outputPaths[-1]} {f'tempVid{counter}.mp4'}')
+        os.system(f'cp {outputPaths[-1]} {f"tempVid{counter}.mp4"}')
+        outputPaths.append(f'tempVid{counter}.mp4')
         counter += 1
 
     if timeNeeded < 0:
         input_stream = ffmpeg.input(outputPaths[-1], ss=0)
         os.system(f'rm {outputPaths[-1]}')
-        input_stream.output(outputPaths[-1],to=duration + timeNeeded).run()
+        input_stream.output(outputPaths[-1], to=duration + timeNeeded).run()
 
     s.stitch(outputPaths)
 
