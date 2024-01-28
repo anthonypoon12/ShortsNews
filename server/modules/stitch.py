@@ -65,15 +65,15 @@ def stitchMP4(input_files, output_name):
 
 if __name__ == "__main__":
 
-    # input_video = ffmpeg.input('output.mp4')
+    input_video = ffmpeg.input('output.mp4')
     # input_video = input_video.video
 
-    # input_audio = ffmpeg.input('outputLeft0.mp3')
+    input_audio = ffmpeg.input('outputLeft0.mp3')
     # input_audio = input_audio.audio
 
-    # ffmpeg.concat(input_video, input_audio, v=1, a=1).output('vidwithaud.mp4').run()
+    ffmpeg.concat(input_video, input_audio, v=1, a=1).output('vidwithaud.mp4').run()
 
-    os.system(f'ffmpeg -i output.mp4 -i outputLeft0.mp3 -c:v copy -map 0:v -map 1:a -shortest -y vidwithhaud.mp4')
+    # os.system(f'ffmpeg -i output.mp4 -i outputLeft0.mp3 -c:v copy -map 0:v -map 1:a -shortest -y vidwithhaud.mp4')
 
     # ffmpeg.output(input_video, input_audio,'vidwithaud.mp4').run()
     # import sys
