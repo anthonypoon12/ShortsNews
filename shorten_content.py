@@ -78,6 +78,7 @@ class ShortenContent:
 
         return segments
 
+    # doesnt work
     def shorten_prompt_rhyme(self, article, sway):
         emulate = 'Senator Alexandria Ocasio-Cortez' if sway == 'left' else 'Tucker Carlson'
 
@@ -108,10 +109,6 @@ class ShortenContent:
 
 shortener = ShortenContent()
 contents = shortener.shorten_prompt(testArticle, 'right')
-print('right: \n')
-
-for i in range(len(contents)):
-    print(contents[i])
 # print('left: \n')
 # print(shortener.shorten_prompt(testArticle, 'left'))
 #####
