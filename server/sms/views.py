@@ -21,7 +21,7 @@ sys.path.append(parent_dir)
 # Now you can import module.file
 import modules.generategif as gg
 
-from models import Headline
+from .models import Headline
 
 @csrf_exempt
 def sms_response(request):
@@ -35,10 +35,12 @@ def sms_response(request):
         # insert code to get headlines, we will have an array of news class:
         #   title
         #   url
+        news = []
 
         # store news in the database
         h = Headline(link_one=news[0].url, link_two=news[1].url, link_three=news[2].url, link_four=news[3].url, link_five=news[4].url)
-        
+        h.save()
+
         # text the user back with the headlines
         resp = MessagingResponse()
         msg = resp.message("Choose a headline." +
@@ -47,30 +49,58 @@ def sms_response(request):
                             "\nHeadline 3: " + news[2].title +
                             "\nHeadline 4: " + news[3].title +
                             "\nHeadline 5: " + news[4].title)
+        return HttpResponse(str(resp))
+    else:
+        # This is the second message!
+        chosen_headline = request.POST['Body']
+
+        mod = Headline.objects.all()[0]
+
+        chosen_url = ""
         
+        match chosen_headline:
+            case "1":
+                chosen_url = mod.link_one
+            case "2":
+                chosen_url = mod.link_two
+            case "3":
+                chosen_url = mod.link_three
+            case "4":
+                chosen_url = mod.link_four
+            case "5":
+                chosen_url = mod.link_five
+            case _:
+                resp = MessagingResponse()
+                msg = resp.message("That is not a valid headline.")
+                return HttpResponse(str(resp))
 
+        # we got our url, so now we can delete our database record.
+        Headline.objects.all()[0].delete()
 
+        # use url to get our stuff to web scrape
+        # we should now have summarized text, and a summarized word
 
-    load_dotenv()
+        # first, we use summarized text to get the mp3
 
-    API_KEY = os.getenv('GIPHY_API_KEY')
+        # next, we use the summary word and pass it to giphy
+        summary_word = ""
 
-    body = request.POST['Body']
-    query = body + " no text"
+        load_dotenv()
 
-    parameters = {
-        "api_key": API_KEY,
-        "q": query,
-        "limit": 3,
-        "offset": 0,
-        "rating": "g",
-        "lang": "en",
-        "bundle": "messaging_non_clips",
-    }
+        API_KEY = os.getenv('GIPHY_API_KEY')
 
-    gg.generateGif(body, 3)
+        query = summary_word + " no text"
+
+        GIF_COUNT = 3
+        gg.generateGif(query, GIF_COUNT)
+
+        # stitch video together
+
+        # do editing to combine video, subway surfers, mp3
+
+        # upload video to platform of choice
     
-    resp = MessagingResponse()
-    msg = resp.message("Your prompt has been received: " + body)
-    
-    return HttpResponse(str(resp))
+        resp = MessagingResponse()
+        msg = resp.message("Your videos have been uploaded!!")
+        
+        return HttpResponse(str(resp))

@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['.ngrok-free.app', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'sms.apps.SmsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
