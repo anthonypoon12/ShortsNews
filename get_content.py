@@ -3,7 +3,7 @@ import requests, bs4
 import shorten_content
 import web_scrape
 import tts
-
+import upload_video
 # from selenium import webdriver
 
 # API key authorization, Initialize the client with your API key
@@ -35,6 +35,9 @@ def get_articles(q):
 
     return articles
     # print(f"{source_id}")
+
+
+upload_video.upload("testvid.mp4", "test", "description", "kw")
 
 
 print("give a topic: ")
