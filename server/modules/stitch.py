@@ -17,7 +17,7 @@ def stitch(input_files, mp3FileName, output_name):
     
 
     # Force all inputs to have the same resolution and aspect ratio
-    input_streams = [inp.filter('scale', size='480x268').filter('setsar', ratio='1:1') for inp in input_streams]
+    input_streams = [inp.filter('scale', size='480x268').filter('setsar', ratio='1/1') for inp in input_streams]
 
 
     # Concatenate the input streams
@@ -41,19 +41,17 @@ def stitchMP4(input_files, output_name):
     output_file = f'{output_name}'
 
     # Create a list of ffmpeg inputs for each file
-    input_streams = []
+    video_streams = []
+    audio_streams = []
 
     for file in input_files:
-        input_streams.append(ffmpeg.input(file))
+        input_stream = ffmpeg.input(file)
+        video_streams.append(input_stream.video.filter('scale', size='480x268').filter('setsar', ratio='1/1'))
+        audio_streams.append(input_stream.audio)
 
-    # Force all inputs to have the same resolution and aspect ratio
-    # input_streams = [inp.filter('scale', size='480x268') for inp in input_streams]
-    input_streams = [inp.filter('scale', size='480x268').filter('setsar', ratio='1/1') for inp in input_streams]
-
-
-
-    # Concatenate the input streams
-    joined = ffmpeg.concat(*input_streams)
+    # Concatenate the video and audio streams separately
+    joined_video = ffmpeg.concat(*video_streams, v=1, a=0)
+    joined_audio = ffmpeg.concat(*audio_streams, v=0, a=1)
 
     # Output options
     output_options = {
@@ -63,7 +61,8 @@ def stitchMP4(input_files, output_name):
     }
 
     # Run ffmpeg to join the files
-    ffmpeg.output(joined, output_file, **output_options).run(overwrite_output=True)
+    ffmpeg.output(joined_video, joined_audio, output_file, **output_options).run(overwrite_output=True)
+
 
 
 

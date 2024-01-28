@@ -192,7 +192,8 @@ def sms_response(request):
                 tts.writeMP3(contentsLeft[i], i, "Left") #outputLeft0, ...
                 # generate output videos 
                 gg.generateGif(contentsLeft[i].keyword, "outputLeft" + str(i) + ".mp3") # outputLeft0.mp4, outputLeft1.mp4, ...
-                merge.merge("outputLeft" + str(i) + ".mp4", f"outputLeft{i}.mp3", f"newOutputLeft{i}.mp4")
+                # merge.merge("outputLeft" + str(i) + ".mp4", f"outputLeft{i}.mp3", f"newOutputLeft{i}.mp4")
+                os.system(f"mv output.mp4 newOutputLeft{i}.mp4")
                 left_segments.append("newOutputLeft" + str(i) + ".mp4")
                 # array of text for segments (3 elements per segment)
                 segment_text_array_left.append(contentsLeft[i].subtitle_chunk())
@@ -205,7 +206,9 @@ def sms_response(request):
                 tts.writeMP3(contentsRight[i], i, "Right") #outputRight0, ...
                 # generate output videos 
                 gg.generateGif(contentsRight[i].keyword, "outputRight" + str(i) + ".mp3") # outputRight0.mp4, outputRight1.mp4, ...
-                merge.merge("outputRight" + str(i) + ".mp4", f"outputRight{i}.mp3", f"newOutputRight{i}.mp4")
+                os.system(f"mv output.mp4 newOutputRight{i}.mp4")
+                
+                # merge.merge("outputRight" + str(i) + ".mp4", f"outputRight{i}.mp3", f"newOutputRight{i}.mp4")
                 
                 right_segments.append("newOutputRight" + str(i) + ".mp4")
 
