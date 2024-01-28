@@ -6,7 +6,10 @@ def stitch(input_files):
     output_file = 'output.mp4'
 
     # Create a list of ffmpeg inputs for each file
-    input_streams = [ffmpeg.input(file) for file in input_files]
+    input_streams = []
+
+    for file in input_files:
+        input_streams.append(ffmpeg.input(file))
 
     # Force all inputs to have the same resolution and aspect ratio
     input_streams = [inp.filter('scale', size='480x268').filter('setsar', ratio='1:1') for inp in input_streams]
@@ -25,6 +28,9 @@ def stitch(input_files):
     # Run ffmpeg to join the files
     ffmpeg.output(joined, output_file, **output_options).run()
 
+
 if __name__ == "__main__":
     import sys
     stitch(*sys.argv[1:])
+
+    import ffmpeg
