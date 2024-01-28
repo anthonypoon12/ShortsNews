@@ -1,23 +1,45 @@
 from newsdataapi import NewsDataApiClient
 import requests, bs4
+
 # from selenium import webdriver
 
 # API key authorization, Initialize the client with your API key
 
 api = NewsDataApiClient(apikey="pub_372043babb911c02c68bff05b2d4fce6de861")
+domain = 'cnn'
+
 
 # You can pass empty or with request parameters {ex. (country = "us")}
 
-response = api.news_api( q= "gaza", country = "us", language="en", domain="nytimes", size=5)
+class ArticleObject:
+    def __init__(self, title, link, index):
+        self.title = title
+        self.link = link
+        self.index = index
 
-print(response["totalResults"])
-results = response["results"]
-for i in range(len(results)):
-    title = results[i]["title"]
-    source_id = results[i]["source_id"]
-    link = results[i]["link"]
-    print(f"{source_id} : {title}\n\t{link}")
+
+def get_articles(q):
+    response = api.news_api(q=q, country="us", language="en", domain=domain, size=5)
+
+    results = response["results"]
+
+    articles = []
+
+    for i in range(len(results)):
+        title = results[i]["title"]
+        link = results[i]["link"]
+        articles.append(ArticleObject(title, link, i))
+
+    return articles
     # print(f"{source_id}")
+
+
+print("give a topic: ")
+topic = input()
+articles = get_articles(topic)
+print(f"give a number between 1 and {len(articles)}")
+index = int(input()) - 1
+print(articles[index].title)
 
 # browser = webdriver.Firefox()
 # browser.get("https://www.nytimes.com/2024/01/27/world/middleeast/gaza-war-israel-hamas-negotiations.html")
