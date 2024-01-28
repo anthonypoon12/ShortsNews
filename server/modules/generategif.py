@@ -10,11 +10,11 @@ load_dotenv()
 
 API_KEY = os.getenv('GIPHY_API_KEY')
 
-def generateGif(query):
+def generateGif(query, mp3FileName):
     query = query + " no text"
     outputPaths = []
 
-    timeNeeded = 10
+    timeNeeded = get_duration(mp3FileName)
 
     parameters = {
         "api_key": API_KEY,
@@ -32,7 +32,7 @@ def generateGif(query):
     mp4url = response.json()['data'][0]['images']['original']['mp4']
     outputPaths.append(f'./templateVid.mp4')
     urllib.request.urlretrieve(mp4url, outputPaths[-1])
-    duration = get_video_duration(outputPaths[-1])
+    duration = get_duration(outputPaths[-1])
     timeNeeded -= duration
 
     counter = 0
@@ -53,7 +53,7 @@ def generateGif(query):
         os.system(f"rm -f {outputPaths[-1]}")
         outputPaths[-1] = "trimmed.mp4"
 
-    s.stitch(outputPaths)
+    s.stitch(outputPaths, mp3FileName)
 
     for file in outputPaths:
         os.system(f'rm {file}')
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     generateGif(sys.argv[1], sys.argv[2])
 
 
-def get_video_duration(file_path):
+def get_duration(file_path):
     try:
         probe = ffmpeg.probe(file_path, cmd='ffprobe')
         duration = float(probe['format']['duration'])

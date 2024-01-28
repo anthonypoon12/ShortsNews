@@ -2,11 +2,12 @@
 
 import ffmpeg
 
-def stitch(input_files):
+def stitch(input_files, mp3FileName):
     output_file = 'output.mp4'
 
     # Create a list of ffmpeg inputs for each file
     input_streams = []
+    mp3_input_stream = ffmpeg.input(mp3FileName)
 
     for file in input_files:
         input_streams.append(ffmpeg.input(file))
@@ -28,6 +29,9 @@ def stitch(input_files):
     # Run ffmpeg to join the files
     ffmpeg.output(joined, output_file, **output_options).run()
 
+    newInputStream = ffmpeg.input(output_file)
+    newJoined = ffmpeg.concat(newInputStream, mp3_input_stream, v=1, a=1)
+    newJoined.output('final.mp4').run(overwrite_output=True)
 
 if __name__ == "__main__":
     import sys
