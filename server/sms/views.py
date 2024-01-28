@@ -53,7 +53,7 @@ def sms_response(request):
         NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 
         api = NewsDataApiClient(apikey=NEWS_API_KEY)
-        domain = 'cnn'
+        domain = 'cnn,bbc,nypost'
 
         # You can pass empty or with request parameters {ex. (country = "us")}
 
