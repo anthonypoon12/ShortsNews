@@ -114,3 +114,4 @@ for i in range(len(contents)):
     print(contents[i])
 # print('left: \n')
 # print(shortener.shorten_prompt(testArticle, 'left'))
+#####
