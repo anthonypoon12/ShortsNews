@@ -32,7 +32,7 @@ def generateGif(query, limit):
         urllib.request.urlretrieve(mp4url, outputPaths[-1])
 
 
-    s.stitch(outputPaths)
+    s.stitch(outputPaths, [3, 5, 10])
 
 if __name__ == "__main__":
     import sys
