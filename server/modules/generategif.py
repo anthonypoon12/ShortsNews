@@ -33,21 +33,30 @@ def generateGif(query):
     outputPaths.append(f'./templateVid.mp4')
     urllib.request.urlretrieve(mp4url, outputPaths[-1])
     duration = get_video_duration(outputPaths[-1])
+    timeNeeded -= duration
 
     counter = 0
 
     while timeNeeded > 0:
-        timeNeeded -= duration
         os.system(f'cp {outputPaths[-1]} {f"tempVid{counter}.mp4"}')
         outputPaths.append(f'tempVid{counter}.mp4')
         counter += 1
+        timeNeeded -= duration
+        # print('----------duration and time needed-----------')
+        # print(f"{duration}  {timeNeeded}")
 
+# Frames are guessed
     if timeNeeded < 0:
-        input_stream = ffmpeg.input(outputPaths[-1], ss=0)
-        os.system(f'rm {outputPaths[-1]}')
-        input_stream.output(outputPaths[-1], to=duration + timeNeeded).run()
+        input_file = ffmpeg.input(outputPaths[-1])
+        output_file = ffmpeg.output(input_file.trim(start_frame=0, end_frame=24*(duration + timeNeeded)), 'trimmed.mp4')
+        ffmpeg.run(output_file)
+        os.system(f"rm -f {outputPaths[-1]}")
+        outputPaths[-1] = "trimmed.mp4"
 
     s.stitch(outputPaths)
+
+    for file in outputPaths:
+        os.system(f'rm {file}')
 
 if __name__ == "__main__":
     import sys
