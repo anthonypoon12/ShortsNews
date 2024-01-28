@@ -22,7 +22,7 @@ class ArticleObject:
 
 
 def get_articles(q):
-    response = api.news_api(q=q, country="us", language="en", domain=domain, size=5)
+    response = api.news_api(q=q, language="en", domain="bbc,nypost,cnn", size=5)
 
     results = response["results"]
 
@@ -45,7 +45,7 @@ topic = input()
 articles = get_articles(topic)
 
 if len(articles) == 0:
-    printf('no articles')
+    print('no articles')
 else:
     print(f"give a number between 1 and {len(articles)}")
     index = int(input()) - 1
