@@ -78,8 +78,25 @@ def sms_response(request):
             msg = resp.message("No headlines available.")
             return HttpResponse(str(resp))
 
+        linkone = ""
+        linktwo = ""
+        linkthree = ""
+        linkfour = ""
+        linkfive = ""
+
+        if len(articles) >= 1:
+            linkone = articles[0].link
+        if len(articles) >= 2:
+            linktwo = articles[1].link
+        if len(articles) >= 3:
+            linkthree = articles[2].link
+        if len(articles) >= 4:
+            linkfour = articles[3].link
+        if len(articles) >= 5:
+            linkfive = articles[4].link
+    
         # store news in the database
-        h = Headline(link_one=articles[0].url, link_two=articles[1].url, link_three=articles[2].url, link_four=articles[3].url, link_five=articles[4].url)
+        h = Headline(link_one=linkone, link_two=linktwo, link_three=linkthree, link_four=linkfour, link_five=linkfive)
         h.save()
 
         # text the user back with the headlines
@@ -99,7 +116,22 @@ def sms_response(request):
 
         chosen_url = ""
 
-        if (chosen_headline > len(articles)):
+        article_length = 0
+
+        if mod.link_five != "":
+            article_length = 5
+        elif mod.link_four != "":
+            article_length = 4
+        elif mod.link_three != "":
+            article_length = 3
+        elif mod.link_two != "":
+            article_length = 2
+        elif mod.link_one != "":
+            article_length = 1
+        else:
+            article_length = 0
+
+        if (int(chosen_headline) > article_length):
             resp = MessagingResponse()
             msg = resp.message("That is not a valid headline.")
             return HttpResponse(str(resp))
@@ -146,7 +178,7 @@ def sms_response(request):
 
             for i in range(len(contents)):
                 tts.writeMP3(contents[i], i) #outputs 0...i
-                giphy_array[i] = (contents[i].keyword, contents[i].content, "output" + str(i) + ".mp3") # (keyword, text segment, mp3 name)
+                giphy_array.append((contents[i].keyword, contents[i].content, "output" + str(i) + ".mp3")) # (keyword, text segment, mp3 name)
 
         # generate videos and stitch video together
 

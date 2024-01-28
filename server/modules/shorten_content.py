@@ -2,8 +2,6 @@ from openai import OpenAI
 
 from dotenv import load_dotenv
 
-testArticle = open("testArticle.txt", "r", encoding='utf-8').read()
-
 class SummarySegment:
     def __init__(self, content, keyword):
         self.content = content
@@ -105,7 +103,4 @@ class ShortenContent:
             print(f'the response is too long. it is {len(content)} long')
 
         return completion.choices[0].message.content
-
-# print('left: \n')
-# print(shortener.shorten_prompt(testArticle, 'left'))
-#####
+        

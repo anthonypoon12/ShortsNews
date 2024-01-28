@@ -3,7 +3,7 @@ from google.cloud import texttospeech
 from mutagen.mp3 import MP3
 
 # import SummarySegment
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "wired-column-412623-7844dfb99f80.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "modules/wired-column-412623-7844dfb99f80.json"
 # Instantiates a client
 client = texttospeech.TextToSpeechClient()
 
