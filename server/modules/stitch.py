@@ -3,14 +3,15 @@
 import ffmpeg
 import copy
 
-def stitch(input_files, times):
+def stitch(input_files, mp3FileName):
     output_file = 'output.mp4'
 
     # Create a list of ffmpeg inputs for each file
-    input_streams = [ffmpeg.input(file) for file in input_files]
+    input_streams = []
+    mp3_input_stream = ffmpeg.input(mp3FileName)
 
-    for x in input_files:
-        getDuration(x)
+    for file in input_files:
+        input_streams.append(ffmpeg.input(file))
 
     # Force all inputs to have the same resolution and aspect ratio
     input_streams = [inp.filter('scale', size='480x268').filter('setsar', ratio='1:1') for inp in input_streams]
@@ -29,12 +30,12 @@ def stitch(input_files, times):
     # Run ffmpeg to join the files
     ffmpeg.output(joined, output_file, **output_options).run()
 
+    newInputStream = ffmpeg.input(output_file)
+    newJoined = ffmpeg.concat(newInputStream, mp3_input_stream, v=1, a=1)
+    newJoined.output('final.mp4').run(overwrite_output=True)
+
 if __name__ == "__main__":
     import sys
     stitch(*sys.argv[1:])
 
-def getDuration(filename):
-    metadata = ffmpeg.probe(filename)
-    # video_stream = next((stream for stream in metadata['streams'] if stream['codec_type'] == 'video'), None)
-    duration = metadata['streams'][0]['duration']
-    return duration
+    import ffmpeg

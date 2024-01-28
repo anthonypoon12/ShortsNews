@@ -1,11 +1,22 @@
 aiohttp==3.9.1
 aiohttp-retry==2.8.3
 aiosignal==1.3.1
+aiohttp==3.9.1
+aiohttp-retry==2.8.3
+aiosignal==1.3.1
+archspec @ file:///croot/archspec_1697725767277/work
 asgiref==3.7.2
 async-timeout==4.0.3
 attrs==23.2.0
 certifi==2023.11.17
 charset-normalizer==3.3.2
+conda @ file:///croot/conda_1701719518285/work
+conda-content-trust @ file:///croot/conda-content-trust_1693490622020/work
+conda-libmamba-solver @ file:///croot/conda-libmamba-solver_1702997573971/work/src
+conda-package-handling @ file:///croot/conda-package-handling_1690999929514/work
+conda_package_streaming @ file:///croot/conda-package-streaming_1690987966409/work
+cryptography @ file:///croot/cryptography_1702070282333/work
+distro @ file:///croot/distro_1701455004953/work
 Django==5.0.1
 ffmpeg-python==0.2.0
 frozenlist==1.4.1
