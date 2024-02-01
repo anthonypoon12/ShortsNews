@@ -14,7 +14,7 @@ import sys
 import os
 
 from newsdataapi import NewsDataApiClient
-import requests, bs4
+import requests
 import modules.shorten_content as shorten_content
 import modules.web_scrape as web_scrape
 import modules.tts as tts
@@ -101,7 +101,7 @@ def sms_response(request):
             linkfour = articles[3].link
         if len(articles) >= 5:
             linkfive = articles[4].link
-    
+
         # store news in the database
         h = Headline(link_one=linkone, link_two=linktwo, link_three=linkthree, link_four=linkfour, link_five=linkfive)
         h.save()
@@ -112,7 +112,7 @@ def sms_response(request):
 
         for n in range(0, len(articles)):
             choice_string += "\nHeadline " + str(n + 1) + ": " + articles[n].title
-        
+
         msg = resp.message(choice_string)
         return HttpResponse(str(resp))
     else:
@@ -142,7 +142,7 @@ def sms_response(request):
             resp = MessagingResponse()
             msg = resp.message("That is not a valid headline.")
             return HttpResponse(str(resp))
-        else: 
+        else:
             match chosen_headline:
                 case "1":
                     chosen_url = mod.link_one
@@ -190,26 +190,26 @@ def sms_response(request):
 
             for i in range(len(contentsLeft)):
                 tts.writeMP3(contentsLeft[i], i, "Left") #outputLeft0, ...
-                # generate output videos 
+                # generate output videos
                 gg.generateGif(contentsLeft[i].keyword, "outputLeft" + str(i) + ".mp3") # outputLeft0.mp4, outputLeft1.mp4, ...
                 # merge.merge("outputLeft" + str(i) + ".mp4", f"outputLeft{i}.mp3", f"newOutputLeft{i}.mp4")
                 os.system(f"mv output.mp4 newOutputLeft{i}.mp4")
                 left_segments.append("newOutputLeft" + str(i) + ".mp4")
                 # array of text for segments (3 elements per segment)
                 segment_text_array_left.append(contentsLeft[i].subtitle_chunk())
-                
+
 
             stitch.stitchMP4(left_segments, "finalLeft.mp4")
 
 
             for i in range(len(contentsRight)):
                 tts.writeMP3(contentsRight[i], i, "Right") #outputRight0, ...
-                # generate output videos 
+                # generate output videos
                 gg.generateGif(contentsRight[i].keyword, "outputRight" + str(i) + ".mp3") # outputRight0.mp4, outputRight1.mp4, ...
                 os.system(f"mv output.mp4 newOutputRight{i}.mp4")
-                
+
                 # merge.merge("outputRight" + str(i) + ".mp4", f"outputRight{i}.mp3", f"newOutputRight{i}.mp4")
-                
+
                 right_segments.append("newOutputRight" + str(i) + ".mp4")
 
                 # array of text for segments (3 elements per segment)
@@ -226,8 +226,8 @@ def sms_response(request):
 
         # upload_video.upload("left_video.mp4", "Left Wing News", "Left Wing News reporting.", "I, Am, Keywords")
         # upload_video.upload("right_video.mp4", "Right Wing News", "Left Wing News reporting.", "I, Am, Keywords")
-    
+
         resp = MessagingResponse()
         msg = resp.message("Your videos have been uploaded!!")
-        
+
         return HttpResponse(str(resp))
